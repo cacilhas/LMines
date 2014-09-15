@@ -111,21 +111,7 @@ local Board = {
 
                 else
                     self:_keepopening(x, y)
-                    local gameover = true
-                    table.foreachi(self, function(_, cel)
-                        if cel.value == "B" and not cel.flag then
-                            gameover = false
-                        elseif cel.value ~= "B" and cel.flag then
-                            gameover = false
-                        end
-                    end)
-
-                    if gameover then
-                        self.gameover = true
-                        self.win = true
-                        local time = self:gettime()
-                        self.gettime = function() return time end
-                    end
+                    self:_checkgameover()
                 end
                 return cel
             end
@@ -140,6 +126,22 @@ local Board = {
             table.foreachi(around, function(_, t)
                 self:_keepopening(x+t.dx, y+t.dy)
             end)
+        end,
+
+        _checkgameover = function(self)
+            local count = self.bombs
+            table.foreachi(self, function(_, cel)
+                if cel.open and cel.value ~= "B" then
+                    count = count + 1
+                end
+            end)
+
+            if count == (self.width * self.height) then
+                self.gameover = true
+                self.win = true
+                local time = self:gettime()
+                self.gettime = function() return time end
+            end
         end,
 
         gettime = function(self)
@@ -157,39 +159,36 @@ local Board = {
                     ly = (y - 1) * 48 + yoffset
                     cel = self:get(x, y)
                     local tile, object
-                    if self.gameover and cel.flag and cel.value ~= "B" then
-                        tile = tiles.closed
-                        object = objects.xflag
-                        love.graphics.draw(tile.img, tile.quad, lx, ly)
-                        love.graphics.draw(object.img, object.quad, lx, ly)
 
-                    elseif cel.open and cel.value == "B" then
+                    -- tile
+                    if cel.open and cel.value == "B" then
                         tile = tiles.red
-                        object = objects.mine
-                        love.graphics.draw(tile.img, tile.quad, lx, ly)
-                        love.graphics.draw(object.img, object.quad, lx, ly)
-
-                    elseif cel.open and cel.value == "0" then
-                        tile = tiles.open
-                        love.graphics.draw(tile.img, tile.quad, lx, ly)
-
                     elseif cel.open then
                         tile = tiles.open
-                        love.graphics.draw(tile.img, tile.quad, lx, ly)
+                    else
+                        tile = tiles.closed
+                    end
+                    love.graphics.draw(tile.img, tile.quad, lx, ly)
+
+                    -- object
+                    if self.gameover and cel.flag and cel.value ~= "B" then
+                        object = objects.xflag
+                    elseif cel.flag then
+                        object = objects.flag
+                    elseif cel.open and cel.value == "B" then
+                        object = objects.mine
+                    else
+                        object = nil
+                    end
+
+                    if object then
+                        love.graphics.draw(object.img, object.quad, lx, ly)
+
+                    elseif cel.open and cel.value ~= "B" and cel.value ~= "0" then
                         love.graphics.setFont(font)
                         love.graphics.setColor(fontcolors[cel.value] or {0, 0, 0})
                         love.graphics.print(cel.value, lx+4, ly+4)
                         love.graphics.reset()
-
-                    elseif cel.flag then
-                        tile = tiles.closed
-                        object = objects.flag
-                        love.graphics.draw(tile.img, tile.quad, lx, ly)
-                        love.graphics.draw(object.img, object.quad, lx, ly)
-
-                    else
-                        tile = tiles.closed
-                        love.graphics.draw(tile.img, tile.quad, lx, ly)
                     end
                 end
             end
