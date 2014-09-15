@@ -171,14 +171,22 @@ local Board = {
                     love.graphics.draw(tile.img, tile.quad, lx, ly)
 
                     -- object
-                    if self.gameover and cel.flag and cel.value ~= "B" then
-                        object = objects.xflag
+                    object = nil
+                    if self.gameover then
+                        if cel.open then
+                            if cel.value == "B" then object = objects.mine end
+                        elseif cel.value == "B" then
+                            if self.win or cel.flag then
+                                object = objects.flag
+                            else
+                                object = objects.mine
+                            end
+                        elseif cel.flag then
+                            object = objects.xflag
+                        end
+
                     elseif cel.flag then
                         object = objects.flag
-                    elseif cel.open and cel.value == "B" then
-                        object = objects.mine
-                    else
-                        object = nil
                     end
 
                     if object then
