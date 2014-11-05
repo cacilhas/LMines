@@ -10,4 +10,5 @@
 *.zip
 .DS_Store
 .env
+.idea
 tmp
