@@ -57,16 +57,18 @@ local Board = {
                 if cel and cel.value ~= "B" then
                     done = true
                     cel.value = "B"
-                    table.foreachi(around, function(_, t)
+                    for _, t in pairs(around) do
                         local cel = self:get(x+t.dx, y+t.dy)
                         if cel and cel.value ~= "B" then
                             cel.value = cel.value + 1
                         end
-                    end)
+                    end
                 end
             end
         end
-        table.foreachi(self, function(_, cel) cel.value = tostring(cel.value) end)
+        for _, cel in ipairs(self) do
+            cel.value = tostring(cel.value)
+        end
         return self
     end,
 
@@ -123,18 +125,18 @@ local Board = {
             if cel.value ~= "0" then cel.open = true return end
 
             cel.open = true
-            table.foreachi(around, function(_, t)
+            for _, t in ipairs(around) do
                 self:_keepopening(x+t.dx, y+t.dy)
-            end)
+            end
         end,
 
         _checkgameover = function(self)
             local count = self.bombs
-            table.foreachi(self, function(_, cel)
+            for _, cel in ipairs(self) do
                 if cel.open and cel.value ~= "B" then
                     count = count + 1
                 end
-            end)
+            end
 
             if count == (self.width * self.height) then
                 self.gameover = true
@@ -152,7 +154,7 @@ local Board = {
         end,
 
         draw = function(self, xoffset, yoffset, objects, tiles, font, fontcolors)
-            local x, y, lx, ly, cel
+            local lx, ly, cel
             for y = 1, self.height do
                 for x = 1, self.width do
                     lx = (x - 1) * 48 + xoffset
