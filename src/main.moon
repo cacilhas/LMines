@@ -1,8 +1,8 @@
 mines = assert require "mines"
 import floor from math
 
+local *
 app = {}
-local reset
 
 
 --------------------------------------------------------------------------------
