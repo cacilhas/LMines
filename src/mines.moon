@@ -59,8 +59,7 @@ class Board
                         cell = @\get x + t.dx, y + t.dy
                         cell.value += 1 if cell and cell.value != -1
 
-    get: (x, y) =>
-        @board[(y-1) * @width + x] if 1 <= x and x <= @width
+    get: (x, y) => @board[(y-1) * @width + x] if 1 <= x and x <= @width
 
     toggleflag: (x, y) =>
         unless @gameover
@@ -103,7 +102,7 @@ class Board
         for cell in *@board
             count += 1 if cell.open and cell.value != -1
 
-        if count == (@width * @height)
+        if count == @width * @height
             @gameover = true
             @win = true
             @stopped = @\gettime!
@@ -123,14 +122,12 @@ class Board
                 lx = (x - 1) * 48 + xoffset
                 ly = (y - 1) * 48 + yoffset
                 cell = @\get x, y
-
-                local tile
-                if cell.open and cell.value == -1
-                    tile = tiles.red
+                tile = if cell.open and cell.value == -1
+                    tiles.red
                 elseif cell.open
-                    tile = tiles.open
+                    tiles.open
                 else
-                    tile = tiles.closed
+                    tiles.closed
                 love.graphics.draw tile.img, tile.quad, lx, ly
 
                 object = nil
