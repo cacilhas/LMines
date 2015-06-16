@@ -60,7 +60,7 @@ class Board
                         cell.value += 1 if cell and cell.value != -1
 
     get: (x, y) =>
-        @board[(y-1) * @width + x] if (x >= 1) and (x <= @width) and (y >= 1) and (y <= @height)
+        @board[(y-1) * @width + x] if 1 <= x and x <= @width
 
     toggleflag: (x, y) =>
         unless @gameover
@@ -81,7 +81,7 @@ class Board
                 if cell.open or cell.flag
                     false
                 else
-                    if cell.value == -1
+                    if cell.value == -1  -- bomb
                         cell.open = true
                         @gameover = true
                         @win = false
@@ -101,7 +101,7 @@ class Board
     _checkgameover: =>
         count = @bombs
         for cell in *@board
-            count +=1 if cell.open and cell.value != -1
+            count += 1 if cell.open and cell.value != -1
 
         if count == (@width * @height)
             @gameover = true
@@ -147,14 +147,14 @@ class Board
                 elseif cell.flag
                     object = objects.flag
 
-                if object
-                    love.graphics.draw object.img, object.quad, lx, ly
+                with love.graphics
+                    if object
+                        .draw object.img, object.quad, lx, ly
 
-                elseif cell.open and cell.value > 0
-                    with love.graphics
+                    elseif cell.open and cell.value > 0
                         .setFont font
                         .setColor fontcolors[cell.value] or {0, 0, 0}
-                        .print (tostring cell.value), lx+4, ly+4
+                        .print "#{cell.value}", lx+4, ly+4
                         .reset!
 
 
