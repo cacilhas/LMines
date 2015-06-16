@@ -15,8 +15,8 @@ local *
 ffi.cdef [[
     typedef struct {
         int value;
-        unsigned char open;
-        unsigned char flag;
+        bool open;
+        bool flag;
     } cell_t;
 ]]
 
@@ -62,10 +62,10 @@ class Board
             @started = love.timer.getTime! unless @started
             cell = @\get x, y
             if cell
-                if cell.open == 1
+                if cell.open
                     false
                 else
-                    cell.flag = if cell.flag == 1 then 0 else 1
+                    cell.flag = not cell.flag
                     cell
 
     open: (x, y) =>
@@ -73,11 +73,11 @@ class Board
             @started = love.timer.getTime! unless @started
             cell = @\get x, y
             if cell
-                if cell.open == 1 or cell.flag == 1
+                if cell.open or cell.flag
                     false
                 else
                     if cell.value == -1
-                        cell.open = 1
+                        cell.open = true
                         @gameover = true
                         @win = false
                         @stopped = @\gettime!
@@ -88,15 +88,15 @@ class Board
 
     _keepopening: (x, y) =>
         cell = @\get x, y
-        if cell and cell.open == 0
-            cell.open = 1
+        if cell and not cell.open
+            cell.open = true
             if cell.value == 0
                 @\_keepopening x + t.dx, y + t.dy for t in *around
 
     _checkgameover: =>
         count = @bombs
         for cell in *@board
-            count +=1 if cell.open == 1 and cell.value != -1
+            count +=1 if cell.open and cell.value != -1
 
         if count == (@width * @height)
             @gameover = true
@@ -120,9 +120,9 @@ class Board
                 cell = @\get x, y
 
                 local tile
-                if cell.open == 1 and cell.value == -1
+                if cell.open and cell.value == -1
                     tile = tiles.red
-                elseif cell.open == 1
+                elseif cell.open
                     tile = tiles.open
                 else
                     tile = tiles.closed
@@ -130,22 +130,22 @@ class Board
 
                 object = nil
                 if @gameover
-                    if cell.open == 1
+                    if cell.open
                         object = objects.mine if cell.value == -1
 
                     elseif cell.value == -1
-                        object = if @win or cell.flag == 1 then objects.flag else objects.mine
+                        object = if @win or cell.flag then objects.flag else objects.mine
 
-                    elseif cell.flag == 1
+                    elseif cell.flag
                         object = objects.xflag
 
-                elseif cell.flag == 1
+                elseif cell.flag
                     object = objects.flag
 
                 if object
                     love.graphics.draw object.img, object.quad, lx, ly
 
-                elseif cell.open == 1 and cell.value > 0
+                elseif cell.open and cell.value > 0
                     with love.graphics
                         .setFont font
                         .setColor fontcolors[cell.value] or {0, 0, 0}
