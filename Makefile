@@ -3,7 +3,7 @@
 #----------------#
 
 PROJECT_NAME= LMines
-ICON= LMines.icns
+ICON= $(PROJECT_NAME).icns
 
 
 #----------------------#
