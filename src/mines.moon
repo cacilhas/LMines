@@ -28,13 +28,13 @@ local around
 with dcoords = (...) -> ffi.new "dcoords_t", ...
     around = {
         dcoords -1, -1
-        dcoords 0, -1
-        dcoords 1, -1
-        dcoords -1, 0
-        dcoords 1, 0
-        dcoords -1, 1
-        dcoords 0, 1
-        dcoords 1, 1
+        dcoords  0, -1
+        dcoords  1, -1
+        dcoords -1,  0
+        dcoords  1,  0
+        dcoords -1,  1
+        dcoords  0,  1
+        dcoords  1,  1
     }
 
 
