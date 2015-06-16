@@ -24,16 +24,18 @@ ffi.cdef [[
 ]]
 
 
-around = {
-    ffi.new "dcoords_t", -1, -1
-    ffi.new "dcoords_t", 0, -1
-    ffi.new "dcoords_t", 1, -1
-    ffi.new "dcoords_t", -1, 0
-    ffi.new "dcoords_t", 1, 0
-    ffi.new "dcoords_t", -1, 1
-    ffi.new "dcoords_t", 0, 1
-    ffi.new "dcoords_t", 1, 1
-}
+local around
+with dcoords = (...) -> ffi.new "dcoords_t", ...
+    around = {
+        dcoords -1, -1
+        dcoords 0, -1
+        dcoords 1, -1
+        dcoords -1, 0
+        dcoords 1, 0
+        dcoords -1, 1
+        dcoords 0, 1
+        dcoords 1, 1
+    }
 
 
 --------------------------------------------------------------------------------
