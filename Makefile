@@ -11,7 +11,7 @@ ICON= $(PROJECT_NAME).icns
 #----------------------#
 
 TARGET= $(PROJECT_NAME).love
-LUACODE= src/conf.lua src/main.lua src/mines.lua
+LUACODE= src/conf.lua src/main.lua src/color.lua src/mines.lua
 ZIP= zip
 AR= tar cf -
 COMPRESS= xz -c
