@@ -15,8 +15,7 @@ local *
 ffi.cdef [[
     typedef struct {
         int value;
-        bool open;
-        bool flag;
+        bool open, flag;
     } cell_t;
 
     typedef struct {
