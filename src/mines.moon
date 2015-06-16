@@ -40,7 +40,7 @@ class Board
     new: (width=16, height=16, bombs=40) =>
         error "invalid parameters" if bombs >= width * height
         @width, @height, @bombs = width, height, bombs
-        @board = [Cell! for _ = 1, width * height]
+        @board = [ffi.new "cell_t" for _ = 1, width * height]
 
         for _ = 1, bombs
             done = false
@@ -149,19 +149,8 @@ class Board
                     with love.graphics
                         .setFont font
                         .setColor fontcolors[cell.value] or {0, 0, 0}
-                        .print (tostring cell), lx+4, ly+4
+                        .print (tostring cell.value), lx+4, ly+4
                         .reset!
-
-
---------------------------------------------------------------------------------
-Cell = ffi.metatype "cell_t", {
-    __tostring: =>
-        tostring @value
-
-    __concat: (other) =>
-        tostring @value .. tostring other
-}
-
 
 
 --------------------------------------------------------------------------------
