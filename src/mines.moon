@@ -18,18 +18,22 @@ ffi.cdef [[
         bool open;
         bool flag;
     } cell_t;
+
+    typedef struct {
+        int dx, dy;
+    } dcoords_t;
 ]]
 
 
 around = {
-    {dx: -1, dy: -1}
-    {dx: 0, dy: -1}
-    {dx: 1, dy: -1}
-    {dx: -1, dy: 0}
-    {dx: 1, dy: 0}
-    {dx: -1, dy: 1}
-    {dx: 0, dy: 1}
-    {dx: 1, dy: 1}
+    ffi.new "dcoords_t", -1, -1
+    ffi.new "dcoords_t", 0, -1
+    ffi.new "dcoords_t", 1, -1
+    ffi.new "dcoords_t", -1, 0
+    ffi.new "dcoords_t", 1, 0
+    ffi.new "dcoords_t", -1, 1
+    ffi.new "dcoords_t", 0, 1
+    ffi.new "dcoords_t", 1, 1
 }
 
 
