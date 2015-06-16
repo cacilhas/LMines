@@ -1,3 +1,5 @@
+ffi = assert require "ffi"
+
 _VERSION = "1.0"
 _DESCRIPTION = "LMines – Lua-implemented Mines"
 _AUTHOR = "ℜodrigo ℭacilhας <batalema@cacilhas.info>"
@@ -6,8 +8,19 @@ _LICENSE = "BSD 3-Clause License"
 
 import floor, random, randomseed from math
 
+local *
+
 
 --------------------------------------------------------------------------------
+ffi.cdef [[
+    typedef struct {
+        int value;
+        unsigned char open;
+        unsigned char flag;
+    } cell_t;
+]]
+
+
 around = {
     {dx: -1, dy: -1}
     {dx: 0, dy: -1}
@@ -27,20 +40,19 @@ class Board
     new: (width=16, height=16, bombs=40) =>
         error "invalid parameters" if bombs >= width * height
         @width, @height, @bombs = width, height, bombs
-        @board = [{value: 0, open: false, flagged: false} for _ = 1, width * height]
+        @board = [Cell! for _ = 1, width * height]
 
         for _ = 1, bombs
             done = false
             while not done
                 x, y = (random width), (random height)
-                cel = @\get x, y
-                if cel and cel.value != "B"
+                cell = @\get x, y
+                if cell and cell.value != -1
                     done = true
-                    cel.value = "B"
+                    cell.value = -1
                     for t in *around
-                        cel = @\get x + t.dx, y + t.dy
-                        cel.value += 1 if cel and cel.value != "B"
-        cel.value = tostring cel.value for cel in *@board
+                        cell = @\get x + t.dx, y + t.dy
+                        cell.value += 1 if cell and cell.value != -1
 
     get: (x, y) =>
         @board[(y-1) * @width + x] if (x >= 1) and (x <= @width) and (y >= 1) and (y <= @height)
@@ -48,43 +60,43 @@ class Board
     toggleflag: (x, y) =>
         unless @gameover
             @started = love.timer.getTime! unless @started
-            cel = @\get x, y
-            if cel
-                if cel.open
+            cell = @\get x, y
+            if cell
+                if cell.open == 1
                     false
                 else
-                    cel.flag = not cel.flag
-                    cel
+                    cell.flag = if cell.flag == 1 then 0 else 1
+                    cell
 
     open: (x, y) =>
         unless @gameover
             @started = love.timer.getTime! unless @started
-            cel = @\get x, y
-            if cel
-                if cel.open or cel.flag
+            cell = @\get x, y
+            if cell
+                if cell.open == 1 or cell.flag == 1
                     false
                 else
-                    if cel.value == "B"
-                        cel.open = true
+                    if cell.value == -1
+                        cell.open = 1
                         @gameover = true
                         @win = false
                         @stopped = @\gettime!
                     else
                         @\_keepopening x, y
                         @\_checkgameover!
-                    cel
+                    cell
 
     _keepopening: (x, y) =>
-        cel = @\get x, y
-        if cel and not cel.open
-            cel.open = true
-            if cel.value == "0"
+        cell = @\get x, y
+        if cell and cell.open == 0
+            cell.open = 1
+            if cell.value == 0
                 @\_keepopening x + t.dx, y + t.dy for t in *around
 
     _checkgameover: =>
         count = @bombs
-        for cel in *@board
-            count +=1 if cel.open and cel.value != "B"
+        for cell in *@board
+            count +=1 if cell.open == 1 and cell.value != -1
 
         if count == (@width * @height)
             @gameover = true
@@ -105,12 +117,12 @@ class Board
             for x = 1, @width
                 lx = (x - 1) * 48 + xoffset
                 ly = (y - 1) * 48 + yoffset
-                cel = @\get x, y
+                cell = @\get x, y
 
                 local tile
-                if cel.open and cel.value == "B"
+                if cell.open == 1 and cell.value == -1
                     tile = tiles.red
-                elseif cel.open
+                elseif cell.open == 1
                     tile = tiles.open
                 else
                     tile = tiles.closed
@@ -118,26 +130,38 @@ class Board
 
                 object = nil
                 if @gameover
-                    if cel.open
-                        object = objects.mine if cel.value == "B"
+                    if cell.open == 1
+                        object = objects.mine if cell.value == -1
 
-                    elseif cel.value == "B"
-                        object = if @win or cel.flag then objects.flag else objects.mine
-                    elseif cel.flag
+                    elseif cell.value == -1
+                        object = if @win or cell.flag == 1 then objects.flag else objects.mine
+
+                    elseif cell.flag == 1
                         object = objects.xflag
 
-                elseif cel.flag
+                elseif cell.flag == 1
                     object = objects.flag
 
                 if object
                     love.graphics.draw object.img, object.quad, lx, ly
 
-                elseif cel.open and cel.value != "B" and cel.value != "0"
+                elseif cell.open == 1 and cell.value > 0
                     with love.graphics
                         .setFont font
-                        .setColor fontcolors[cel.value] or {0, 0, 0}
-                        .print cel.value, lx+4, ly+4
+                        .setColor fontcolors[cell.value] or {0, 0, 0}
+                        .print (tostring cell), lx+4, ly+4
                         .reset!
+
+
+--------------------------------------------------------------------------------
+Cell = ffi.metatype "cell_t", {
+    __tostring: =>
+        tostring @value
+
+    __concat: (other) =>
+        tostring @value .. tostring other
+}
+
 
 
 --------------------------------------------------------------------------------
