@@ -150,7 +150,7 @@ class Board
 
                     elseif cell.open and cell.value > 0
                         .setFont font
-                        .setColor (fontcolors cell.value)\expode!
+                        .setColor (fontcolors cell.value)\explode!
                         .print "#{cell.value}", lx+4, ly+4
                         .reset!
 
