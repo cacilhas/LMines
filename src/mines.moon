@@ -2,7 +2,7 @@ ffi = assert require "ffi"
 
 _VERSION = "1.0"
 _DESCRIPTION = "LMines – Lua-implemented Mines"
-_AUTHOR = "ℜodrigo ℭacilhας <batalema@cacilhas.info>"
+_AUTHOR = "ℜodrigo Arĥimedeς ℳontegasppa ℭacilhας <batalema@cacilhas.info>"
 _URL = "https://bitbucket.org/cacilhas/lmines"
 _LICENSE = "BSD 3-Clause License"
 
