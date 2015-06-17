@@ -114,7 +114,7 @@ reset = -> app.board = mines.newboard 10, 10, 16
 
 
 --------------------------------------------------------------------------------
-_graphics_reset = love.graphics.reset
-love.graphics.reset = (...) ->
-    _graphics_reset ...
-    love.graphics.setBackgroundColor 0xc6, 0xc7, 0xc9
+with graphics_reset = love.graphics.reset
+    love.graphics.reset = (...) ->
+        graphics_reset ...
+        love.graphics.setBackgroundColor 0xc6, 0xc7, 0xc9

@@ -64,8 +64,7 @@ class Board
     toggleflag: (x, y) =>
         unless @gameover
             @started = love.timer.getTime! unless @started
-            cell = @\get x, y
-            if cell
+            if cell = @\get x, y
                 if cell.open
                     false
                 else
@@ -75,8 +74,7 @@ class Board
     open: (x, y) =>
         unless @gameover
             @started = love.timer.getTime! unless @started
-            cell = @\get x, y
-            if cell
+            if cell = @\get x, y
                 if cell.open or cell.flag
                     false
                 else
