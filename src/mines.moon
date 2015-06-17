@@ -130,19 +130,18 @@ class Board
                     tiles.closed
                 love.graphics.draw tile.img, tile.quad, lx, ly
 
-                object = nil
-                if @gameover
+                object = if @gameover
                     if cell.open
-                        object = objects.mine if cell.value == -1
+                        objects.mine if cell.value == -1
 
                     elseif cell.value == -1
-                        object = if @win or cell.flag then objects.flag else objects.mine
+                        if @win or cell.flag then objects.flag else objects.mine
 
                     elseif cell.flag
-                        object = objects.xflag
+                        objects.xflag
 
                 elseif cell.flag
-                    object = objects.flag
+                    objects.flag
 
                 with love.graphics
                     if object
