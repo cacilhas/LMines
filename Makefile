@@ -11,7 +11,7 @@ ICON= $(PROJECT_NAME).icns
 #----------------------#
 
 TARGET= $(PROJECT_NAME).love
-LUACODE= src/conf.lua src/main.lua src/color.lua src/mines.lua
+LUACODE= $(shell for SRC in src/*.moon; do echo $${SRC%.moon}.lua; done)
 ZIP= zip
 AR= tar cf -
 COMPRESS= xz -c
@@ -91,6 +91,7 @@ mrproper: clean
 	$(RM) $(DIST)
 
 
+.PHONY: test
 test: $(LUACODE)
 	$(LOVE) src
 
