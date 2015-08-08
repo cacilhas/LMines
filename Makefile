@@ -11,7 +11,8 @@ ICON= $(PROJECT_NAME).icns
 #----------------------#
 
 TARGET= $(PROJECT_NAME).love
-LUACODE= $(shell find src -name "*.moon" | sed 's!\.moon$$!.lua!')
+SRC= $(shell find src -name "*.moon")
+LUACODE= $(SRC:.moon=.lua)
 ZIP= zip
 AR= tar cf -
 COMPRESS= xz -c
