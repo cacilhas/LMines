@@ -2,9 +2,9 @@ ffi = assert require "ffi"
 
 
 ffi.cdef [[
-    typedef struct {
+    struct color {
         unsigned char r, g, b, a;
-    } color_t;
+    };
 ]]
 
 
@@ -14,4 +14,4 @@ color_mt =
             @r, @g, @b, @a
 
 
-ffi.metatype "color_t", color_mt
+ffi.metatype "struct color", color_mt

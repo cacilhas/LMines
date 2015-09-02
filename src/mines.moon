@@ -13,19 +13,19 @@ local *
 
 --------------------------------------------------------------------------------
 ffi.cdef [[
-    typedef struct {
+    struct cell {
         int value;
         bool open, flag;
-    } cell_t;
+    };
 
-    typedef struct {
+    struct dcoords {
         int dx, dy;
-    } dcoords_t;
+    };
 ]]
 
 
 local around
-with dcoords = (...) -> ffi.new "dcoords_t", ...
+with dcoords = (...) -> ffi.new "struct dcoords", ...
     around = {
         dcoords -1, -1
         dcoords  0, -1
@@ -45,7 +45,7 @@ class Board
     new: (width=16, height=16, bombs=40) =>
         error "invalid parameters" if bombs >= width * height
         @width, @height, @bombs = width, height, bombs
-        @board = [ffi.new "cell_t" for _ = 1, width * height]
+        @board = [ffi.new "struct cell" for _ = 1, width * height]
 
         for _ = 1, bombs
             done = false
