@@ -1,3 +1,4 @@
+local *
 ffi = assert require "ffi"
 
 _VERSION = "1.0"
@@ -8,14 +9,13 @@ _LICENSE = "BSD 3-Clause License"
 
 import floor, random, randomseed from math
 
-local *
-
 
 --------------------------------------------------------------------------------
 ffi.cdef [[
     struct cell {
         int value;
-        bool open, flag;
+        bool open,
+             flag;
     };
 
     struct dcoords {
@@ -23,19 +23,20 @@ ffi.cdef [[
     };
 ]]
 
+dcoords_t = ffi.typeof "struct dcoords"
+cell_t = ffi.typeof "struct cell"
 
-local around
-with dcoords = (...) -> ffi.new "struct dcoords", ...
-    around = {
-        dcoords -1, -1
-        dcoords  0, -1
-        dcoords  1, -1
-        dcoords -1,  0
-        dcoords  1,  0
-        dcoords -1,  1
-        dcoords  0,  1
-        dcoords  1,  1
-    }
+
+around = {
+    dcoords_t -1, -1
+    dcoords_t  0, -1
+    dcoords_t  1, -1
+    dcoords_t -1,  0
+    dcoords_t  1,  0
+    dcoords_t -1,  1
+    dcoords_t  0,  1
+    dcoords_t  1,  1
+}
 
 
 --------------------------------------------------------------------------------
@@ -45,7 +46,7 @@ class Board
     new: (width=16, height=16, bombs=40) =>
         error "invalid parameters" if bombs >= width * height
         @width, @height, @bombs = width, height, bombs
-        @board = [ffi.new "struct cell" for _ = 1, width * height]
+        @board = [cell_t! for _ = 1, width * height]
 
         for _ = 1, bombs
             done = false

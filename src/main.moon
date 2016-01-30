@@ -1,9 +1,9 @@
+local *
 mines = assert require "mines"
 color = assert require "color"
 import floor from math
 
-local *
-app = {}
+app = :nil
 
 
 --------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ love.mousereleased = (x, y, button) ->
     lx = (floor x / 48) + 1
     ly = (floor y / 48)
     with love.keyboard
-        if button == "l" and not ((.isDown "rgui") or (.isDown "lgui"))
+        if button == 1 and not ((.isDown "rgui") or (.isDown "lgui"))
             app.board\open lx, ly
         else
             app.board\toggleflag lx, ly

@@ -11,7 +11,7 @@ ICON= $(PROJECT_NAME).icns
 #----------------------#
 
 TARGET= $(PROJECT_NAME).love
-SRC= $(shell find src -name "*.moon")
+SRC= $(wildcard src/*.moon)
 LUACODE= $(SRC:.moon=.lua)
 ZIP= zip
 AR= tar cf -

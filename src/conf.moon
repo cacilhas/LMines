@@ -1,6 +1,6 @@
 love.conf = (t) ->
     with t
-        .version = "0.9.1"
+        .version = "0.10.0"
         .identity = "lmines"
 
     with t.window
