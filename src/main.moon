@@ -3,10 +3,10 @@ mines = assert require "mines"
 color = assert require "color"
 import floor from math
 
-app = :nil
+app = {}
 
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 love.load = ->
     with love.graphics
         objects = .newImage "images/objects.png"
@@ -70,7 +70,7 @@ love.load = ->
     reset!
 
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 love.draw = ->
     app.board\draw 0, 48, app.objects, app.tiles, app.font, app.fontcolors
     with love.graphics
@@ -94,26 +94,26 @@ love.draw = ->
         .draw smiley.img, smiley.quad, 216, 0
 
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 love.mousereleased = (x, y, button) ->
     lx = (floor x / 48) + 1
     ly = (floor y / 48)
     with love.keyboard
-        if button == 1 and not ((.isDown "rgui") or (.isDown "lgui"))
+        if button == 1 and not (.isDown"rgui" or .isDown"lgui")
             app.board\open lx, ly
         else
             app.board\toggleflag lx, ly
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 love.keyreleased = (key) ->
     reset! if key == "escape"
 
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 reset = -> app.board = mines.newboard 10, 10, 16
 
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 with graphics_reset = love.graphics.reset
     love.graphics.reset = (...) ->
         graphics_reset ...
