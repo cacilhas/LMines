@@ -1,5 +1,4 @@
 local *
-ffi = assert require "ffi"
 
 _VERSION = "1.0"
 _DESCRIPTION = "LMines – Lua-implemented Mines"
@@ -8,34 +7,20 @@ _URL = "https://bitbucket.org/cacilhas/lmines"
 _LICENSE = "BSD 3-Clause License"
 
 import floor, random, randomseed from math
+Cell = assert require "cell"
+DCoords = assert require "dcoords"
 
 
 --------------------------------------------------------------------------------
-ffi.cdef [[
-    struct cell {
-        int value;
-        bool open,
-             flag;
-    };
-
-    struct dcoords {
-        int dx, dy;
-    };
-]]
-
-dcoords_t = ffi.typeof "struct dcoords"
-cell_t = ffi.typeof "struct cell"
-
-
 around = {
-    dcoords_t -1, -1
-    dcoords_t  0, -1
-    dcoords_t  1, -1
-    dcoords_t -1,  0
-    dcoords_t  1,  0
-    dcoords_t -1,  1
-    dcoords_t  0,  1
-    dcoords_t  1,  1
+    DCoords -1, -1
+    DCoords  0, -1
+    DCoords  1, -1
+    DCoords -1,  0
+    DCoords  1,  0
+    DCoords -1,  1
+    DCoords  0,  1
+    DCoords  1,  1
 }
 
 
@@ -46,7 +31,7 @@ class Board
     new: (width=16, height=16, bombs=40) =>
         error "invalid parameters" if bombs >= width * height
         @width, @height, @bombs = width, height, bombs
-        @board = [cell_t! for _ = 1, width * height]
+        @board = [Cell! for _ = 1, width * height]
 
         for _ = 1, bombs
             done = false
