@@ -113,8 +113,9 @@ love.keyreleased = (key) ->
 reset = -> app.board = mines.newboard 10, 10, 16
 
 
-with graphics_reset = love.graphics.reset
-    love.graphics.reset = (...) ->
-        graphics_reset ...
-        love.graphics.setBackgroundColor 0xc6, 0xc7, 0xc9
 --------------------------------------------------------------------------------
+with g = love.graphics
+    with graphics_reset = g.reset
+        g.reset = (...) ->
+            graphics_reset ...
+            g.setBackgroundColor 0xc6, 0xc7, 0xc9

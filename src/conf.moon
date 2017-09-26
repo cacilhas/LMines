@@ -3,9 +3,9 @@ love.conf = (t) ->
         .version = "0.10.0"
         .identity = "lmines"
 
-    with t.window
-        .title = "LMines"
-        .icon = "images/lmines.png"
-        .width = 480
-        .height = 528
-        .fullscreen = false
+        with .window
+            .title = "LMines"
+            .icon = "images/lmines.png"
+            .width = 480
+            .height = 528
+            .fullscreen = false
