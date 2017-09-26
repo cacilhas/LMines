@@ -1,11 +1,14 @@
 love.conf = (t) ->
+    title = "LMines"
+    id = title\lower!
+
     with t
         .version = "0.10.0"
-        .identity = "lmines"
+        .identity = id
 
         with .window
-            .title = "LMines"
-            .icon = "images/lmines.png"
+            .title = title
+            .icon = "images/#{id}.png"
             .width = 480
             .height = 528
             .fullscreen = false
